@@ -22,13 +22,13 @@ import org.gradle.internal.progress.BuildOperationDescriptor
 import org.gradle.internal.resources.DefaultResourceLockCoordinationService
 import org.gradle.internal.work.DefaultWorkerLeaseService
 import org.gradle.internal.work.WorkerLeaseService
-import spock.lang.Specification
+import org.gradle.test.fixtures.concurrent.ConcurrentSpec
 import spock.lang.Unroll
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
-class DefaultBuildOperationQueueTest extends Specification {
+class DefaultBuildOperationQueueTest extends ConcurrentSpec {
 
     public static final String LOG_LOCATION = "<log location>"
     abstract static class TestBuildOperation implements RunnableBuildOperation {
@@ -190,16 +190,21 @@ class DefaultBuildOperationQueueTest extends Specification {
 
         when:
         runs.times { operationQueue.add(new SynchronizedBuildOperation(operationAction, startedLatch, releaseLatch)) }
-        // wait for operations to begin running
-        startedLatch.await()
+        async {
+            start {
+                operationQueue.waitForCompletion()
+                instant.queueComplete
+            }
 
-        and:
-        operationQueue.cancel()
+            // wait for operations to begin running
+            startedLatch.await()
 
-        and:
-        // release the running operations to complete
-        releaseLatch.countDown()
-        operationQueue.waitForCompletion()
+            operationQueue.cancel()
+
+            // release the running operations to complete
+            releaseLatch.countDown()
+            thread.blockUntil.queueComplete
+        }
 
         then:
         expectedInvocations * operationAction.run()
