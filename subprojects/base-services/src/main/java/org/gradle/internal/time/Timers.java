@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Timers {
     public static Timer startTimer() {
-        return new Clock();
+        return new DefaultTimer();
     }
 
     public static CountdownTimer startTimer(long timeoutMillis) {
-        return new CountdownClock(timeoutMillis, TimeUnit.MILLISECONDS);
+        return new DefaultCountdownTimer(timeoutMillis, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -32,6 +32,6 @@ public class Timers {
      * When created with a zero or negative timeout, will never expire.
      */
     public static CountdownTimer startTimer(long timeout, TimeUnit unit) {
-        return new CountdownClock(timeout, unit);
+        return new DefaultCountdownTimer(timeout, unit);
     }
 }

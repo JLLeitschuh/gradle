@@ -16,13 +16,8 @@
 
 package org.gradle.internal.time;
 
-public class Clock implements Timer {
+public class Clock extends DefaultTimer implements EventTimer {
     private long startTime;
-    private long startInstant;
-    private TimeProvider timeProvider;
-
-    private static final long MS_PER_MINUTE = 60000;
-    private static final long MS_PER_HOUR = MS_PER_MINUTE * 60;
 
     public Clock() {
         this(new TrueTimeProvider());
@@ -45,35 +40,13 @@ public class Clock implements Timer {
         reset();
     }
 
-    @Override
-    public String getElapsed() {
-        long timeInMs = getElapsedMillis();
-        return prettyTime(timeInMs);
-    }
-
-    @Override
-    public long getElapsedMillis() {
-        return Math.max(timeProvider.getCurrentTimeForDuration() - startInstant, 0);
-    }
-
-    public void reset() {
-        startTime = timeProvider.getCurrentTime();
-        startInstant = timeProvider.getCurrentTimeForDuration();
-    }
-
     public long getStartTime() {
         return startTime;
     }
 
-    public static String prettyTime(long timeInMs) {
-        StringBuilder result = new StringBuilder();
-        if (timeInMs > MS_PER_HOUR) {
-            result.append(timeInMs / MS_PER_HOUR).append(" hrs ");
-        }
-        if (timeInMs > MS_PER_MINUTE) {
-            result.append((timeInMs % MS_PER_HOUR) / MS_PER_MINUTE).append(" mins ");
-        }
-        result.append((timeInMs % MS_PER_MINUTE) / 1000.0).append(" secs");
-        return result.toString();
+    @Override
+    public void reset() {
+        super.reset();
+        startTime = timeProvider.getCurrentTime();
     }
 }

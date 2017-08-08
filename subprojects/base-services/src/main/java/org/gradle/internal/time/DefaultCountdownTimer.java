@@ -19,10 +19,10 @@ package org.gradle.internal.time;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-class CountdownClock extends Clock implements CountdownTimer {
+class DefaultCountdownTimer extends Clock implements CountdownTimer {
     private final long timeoutMillis;
 
-    CountdownClock(long timeout, TimeUnit unit) {
+    DefaultCountdownTimer(long timeout, TimeUnit unit) {
         super();
         this.timeoutMillis = unit.toMillis(timeout);
     }
