@@ -21,6 +21,11 @@ public class DefaultTimer implements Timer {
     protected long startInstant;
     protected TimeProvider timeProvider;
 
+    protected DefaultTimer(TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
+        reset();
+    }
+
     public static String prettyTime(long timeInMs) {
         StringBuilder result = new StringBuilder();
         if (timeInMs > MS_PER_HOUR) {
