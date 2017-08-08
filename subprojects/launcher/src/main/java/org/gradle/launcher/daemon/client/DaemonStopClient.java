@@ -55,7 +55,6 @@ public class DaemonStopClient {
     private final DaemonConnector connector;
     private final IdGenerator<?> idGenerator;
     private final StopDispatcher stopDispatcher;
-    private final TimeProvider timeProvider = new TrueTimeProvider();
 
     public DaemonStopClient(DaemonConnector connector, IdGenerator<?> idGenerator) {
         this.connector = connector;
