@@ -28,7 +28,7 @@ import org.gradle.internal.remote.internal.inet.InetAddressFactory;
 import org.gradle.internal.service.DefaultServiceRegistry;
 import org.gradle.internal.service.ServiceRegistry;
 import org.gradle.internal.service.scopes.GlobalScopeServices;
-import org.gradle.internal.time.Clock;
+import org.gradle.internal.time.DefaultEventTimer;
 import org.gradle.internal.time.EventTimer;
 import org.gradle.launcher.daemon.configuration.DaemonServerConfiguration;
 import org.gradle.launcher.daemon.context.DaemonContext;
@@ -77,7 +77,7 @@ public class DaemonServices extends DefaultServiceRegistry {
         super(NativeServices.getInstance(), loggingServices);
         this.configuration = configuration;
         this.loggingManager = loggingManager;
-        this.daemonRunningTimer = new Clock();
+        this.daemonRunningTimer = new DefaultEventTimer();
 
         addProvider(new DaemonRegistryServices(configuration.getBaseDir()));
         addProvider(new GlobalScopeServices(true, additionalModuleClassPath));

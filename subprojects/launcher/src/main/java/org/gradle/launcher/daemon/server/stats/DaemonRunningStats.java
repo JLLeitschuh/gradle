@@ -16,7 +16,7 @@
 
 package org.gradle.launcher.daemon.server.stats;
 
-import org.gradle.internal.time.Clock;
+import org.gradle.internal.time.DefaultEventTimer;
 import org.gradle.internal.time.EventTimer;
 
 public class DaemonRunningStats {
@@ -55,7 +55,7 @@ public class DaemonRunningStats {
 
     public void buildStarted() {
         ++buildCount;
-        currentBuildTimer = new Clock();
+        currentBuildTimer = new DefaultEventTimer();
     }
 
     public void buildFinished() {

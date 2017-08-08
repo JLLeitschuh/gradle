@@ -16,7 +16,7 @@
 
 package org.gradle.internal.time;
 
-public class Clock extends DefaultTimer implements EventTimer {
+public class DefaultEventTimer extends DefaultTimer implements EventTimer {
     private long startTime;
 
     /**
@@ -24,18 +24,18 @@ public class Clock extends DefaultTimer implements EventTimer {
      * An attempt is made to correct the startInstant for time elapsed since the specified startTime.
      * However, this correction is susceptible to clock-shift, as well clocks that are not synchronized.
      */
-    public Clock(long startTime) {
+    public DefaultEventTimer(long startTime) {
         super(new TrueTimeProvider());
         this.startTime = startTime;
         long msSinceStart = Math.max(timeProvider.getCurrentTime() - startTime, 0);
         this.startInstant = timeProvider.getCurrentTimeForDuration() - msSinceStart;
     }
 
-    public Clock() {
+    public DefaultEventTimer() {
         super(new TrueTimeProvider());
     }
 
-    protected Clock(TimeProvider timeProvider) {
+    protected DefaultEventTimer(TimeProvider timeProvider) {
         super(timeProvider);
     }
 
