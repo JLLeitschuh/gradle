@@ -33,6 +33,7 @@ import org.gradle.launcher.daemon.server.api.DaemonStateControl;
 import org.gradle.launcher.daemon.server.api.DaemonStoppedException;
 import org.gradle.launcher.daemon.server.api.DaemonUnavailableException;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -268,7 +269,7 @@ public class DaemonStateCoordinator implements Stoppable, DaemonStateControl {
                         case Canceled:
                         case StopRequested:
                             LOGGER.debug("Cancel: daemon is busy, sleeping until state changes.");
-                            condition.awaitUntil(timer.getExpiryTime());
+                            condition.await(timer.getRemainingMillis(), TimeUnit.MILLISECONDS);
                             break;
                         case Broken:
                             throw new IllegalStateException("This daemon is in a broken state.");

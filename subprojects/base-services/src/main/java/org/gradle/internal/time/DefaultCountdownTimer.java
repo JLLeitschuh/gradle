@@ -16,27 +16,26 @@
 
 package org.gradle.internal.time;
 
-import java.util.Date;
+import com.google.common.base.Preconditions;
+
 import java.util.concurrent.TimeUnit;
 
-class DefaultCountdownTimer extends Clock implements CountdownTimer {
+class DefaultCountdownTimer extends DefaultTimer implements CountdownTimer {
     private final long timeoutMillis;
 
     DefaultCountdownTimer(long timeout, TimeUnit unit) {
         super();
+        Preconditions.checkArgument(timeout > 0);
         this.timeoutMillis = unit.toMillis(timeout);
     }
 
     @Override
     public boolean hasExpired() {
-        if (timeoutMillis <= 0) {
-            return false;
-        }
-        return getElapsedMillis() > timeoutMillis;
+        return getRemainingMillis() <= 0;
     }
 
     @Override
-    public Date getExpiryTime() {
-        return new Date(getStartTime() + timeoutMillis);
+    public long getRemainingMillis() {
+        return Math.max(timeoutMillis - getElapsedMillis(), 0);
     }
 }
