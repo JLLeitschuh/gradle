@@ -20,6 +20,7 @@ import com.google.common.base.Splitter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.invocation.Gradle
 import org.gradle.integtests.fixtures.executer.GradleExecuter
 import org.gradle.model.ModelMap
 import org.gradle.model.Mutate
@@ -162,6 +163,19 @@ class PluginBuilder {
 
             class $className implements $Plugin.name<$Project.name> {
                 void apply($Project.name project) {
+                    $impl
+                }
+            }
+        """)
+        this
+    }
+
+    PluginBuilder addInitPlugin(String impl, String id = "test-plugin", String className = "TestPlugin") {
+        addPluginSource(id, className, """
+            package $packageName
+
+            class $className implements $Plugin.name<$Gradle.name> {
+                void apply($Gradle.name gradle) {
                     $impl
                 }
             }
